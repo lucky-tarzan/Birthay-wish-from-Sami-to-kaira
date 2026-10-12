@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday 🎂</title>
+<!-- FONT: change the family here AND in --font below -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== 1. THEME: change fonts & colours here ===== */
+:root{
+  --font:'Poppins','Inter','SF Pro Display',system-ui,sans-serif;
+  --font-script:'Dancing Script',cursive;
+  --bg:#0a0612;
+  --c1:#ff4d8d;   /* hot pink glow   */
+  --c2:#8a3ffc;   /* purple glow     */
+  --c3:#ff8a5c;   /* warm coral glow */
+  --text:#fff;
+  --muted:rgba(255,255,255,.72);
+  --glass:rgba(255,255,255,.08);
+  --glass-b:rgba(255,255,255,.2);
+  --radius:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hidden;
+  padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+
+/* animated glowing gradient background */
+.glow{position:fixed;inset:0;z-index:0;overflow:hidden}
+.glow i{position:absolute;border-radius:50%;filter:blur(80px);opacity:.75;animation:drift 18s ease-in-out infinite alternate}
+.glow i:nth-child(1){width:70vmax;height:70vmax;background:var(--c2);left:-20vmax;top:-15vmax}
+.glow i:nth-child(2){width:60vmax;height:60vmax;background:var(--c1);right:-20vmax;bottom:-18vmax;animation-delay:-6s}
+.glow i:nth-child(3){width:40vmax;height:40vmax;background:var(--c3);left:30vw;bottom:-25vmax;animation-delay:-11s;opacity:.55}
+@keyframes drift{to{transform:translate(8vmax,-6vmax) scale(1.15)}}
+#hearts{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.heart{position:absolute;bottom:-60px;animation:rise linear infinite}
+@keyframes rise{0%{transform:translate(0,0) rotate(-10deg);opacity:0}10%,90%{opacity:var(--o)}
+  50%{transform:translate(var(--dx),-55vh) rotate(10deg)}100%{transform:translate(calc(var(--dx)*-1),-115vh);opacity:0}}
+
+/* views */
+.view{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 20px;text-align:center;overflow-y:auto;opacity:0;pointer-events:none;transform:translateY(16px);
+  transition:opacity .6s ease,transform .6s ease}
+.view.show{opacity:1;pointer-events:auto;transform:none}
+.view.top{justify-content:flex-start;padding-top:70px}
+h1,h2{font-weight:700;letter-spacing:-.5px;line-height:1.1}
+h1{font-size:clamp(2.2rem,9vw,4.2rem)}
+h2{font-size:clamp(1.6rem,6vw,2.4rem);margin-bottom:6px}
+.script{font-family:var(--font-script);font-weight:700}
+.sub{color:var(--muted);font-weight:300;margin-top:12px;max-width:420px;line-height:1.6}
+.btn{font-family:inherit;color:var(--text);cursor:pointer;margin-top:26px;padding:13px 30px;font-size:.95rem;font-weight:500;
+  background:var(--glass);border:1px solid var(--glass-b);border-radius:999px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:transform .2s,box-shadow .3s,background .3s}
+.btn:hover{box-shadow:0 0 28px rgba(255,77,141,.55);background:rgba(255,255,255,.14)}
+.btn:active{transform:scale(.95)}
+.back{position:fixed;top:calc(14px + env(safe-area-inset-top,0));left:16px;z-index:5;margin:0;padding:9px 18px;font-size:.85rem;display:none}
+.back.show{display:block}
+
+/* quiz */
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:22px;width:min(340px,100%)}
+.opts .btn{margin:0;border-radius:16px}
+.reply{margin-top:18px;min-height:50px;color:var(--c3);font-weight:500}
+.dots{display:flex;gap:8px;margin-bottom:24px}.dots b{width:8px;height:8px;border-radius:50%;background:var(--glass-b);transition:.3s}.dots b.on{background:var(--c1);box-shadow:0 0 10px var(--c1)}
+
+/* menu */
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px;width:min(420px,100%)}
+.card{cursor:pointer;padding:26px 12px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-b);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:transform .25s,box-shadow .3s;font-weight:500}
+.card:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(138,63,252,.45)}
+.card:active{transform:scale(.96)}
+.card span{display:block;font-size:2rem;margin-bottom:8px}
+
+/* memories grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;width:min(760px,100%);margin-top:20px}
+.mem{border-radius:18px;overflow:hidden;background:var(--glass);border:1px solid var(--glass-b);animation:pop .7s both}
+.mem .ph{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;font-size:2.4rem;background:linear-gradient(135deg,var(--c2),var(--c1))}
+.mem img{width:100%;height:100%;object-fit:cover;display:block}
+.mem p{padding:10px;font-size:.8rem;color:var(--muted)}
+@keyframes pop{from{opacity:0;transform:translateY(20px) scale(.95)}}
+
+/* letter */
+.env{position:relative;width:min(340px,92%);margin-top:26px;cursor:pointer}
+.env .flap{font-size:4.5rem;transition:transform .6s;display:block}
+.env.open .flap{transform:scale(.6) translateY(-10px);opacity:.5}
+.paper{max-height:0;overflow:hidden;opacity:0;transition:max-height 1s ease,opacity .8s ease,padding .6s;
+  background:rgba(255,255,255,.1);border:1px solid var(--glass-b);border-radius:var(--radius);text-align:left;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:0 22px}
+.env.open .paper{max-height:1400px;opacity:1;padding:24px 22px}
+.paper h3{font-family:var(--font-script);font-size:1.9rem;margin-bottom:10px}
+.paper p{font-weight:300;line-height:1.8;margin-bottom:12px;font-size:.95rem}
+.paper .from{font-family:var(--font-script);font-size:1.6rem;text-align:right;color:var(--c3)}
+
+/* voice */
+.voice{margin-top:26px;padding:24px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-b);width:min(360px,100%)}
+.voice audio{width:100%;margin-top:14px;border-radius:30px}
+
+/* cake & candles */
+.cake{position:relative;margin-top:36px;width:210px}
+.candles{display:flex;justify-content:center;gap:26px;height:70px;align-items:flex-end}
+.candle{position:relative;width:12px;height:42px;border-radius:4px;background:linear-gradient(#fff,#ffd1e3)}
+.flame{position:absolute;left:50%;bottom:100%;width:14px;height:24px;margin-left:-7px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  background:radial-gradient(circle at 50% 70%,#fff 10%,#ffd36b 45%,var(--c3) 100%);box-shadow:0 0 22px 6px rgba(255,170,90,.7);
+  transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate;transition:opacity .4s,transform .5s}
+@keyframes flick{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.9,1.12) rotate(3deg)}}
+.out .flame{opacity:0;transform:scale(.2) translateY(-20px);animation:none}
+.smoke{position:absolute;left:50%;bottom:100%;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);opacity:0}
+.out .smoke{animation:smoke 2s ease-out forwards}
+@keyframes smoke{0%{opacity:.7;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(10px,-70px) scale(5)}}
+.tier{height:46px;border-radius:12px 12px 6px 6px;margin:0 auto;background:linear-gradient(135deg,var(--c1),var(--c3))}
+.tier.a{width:120px}.tier.b{width:210px;height:56px;background:linear-gradient(135deg,var(--c2),var(--c1));margin-top:-2px}
+.wish{margin-top:24px;min-height:30px;font-family:var(--font-script);font-size:1.8rem;color:var(--c3);opacity:0;transition:opacity 1s}
+.wish.show{opacity:1}
+
+/* music button */
+#music{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0));z-index:9;width:46px;height:46px;border-radius:50%;
+  display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;color:#fff;background:var(--glass);
+  border:1px solid var(--glass-b);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#music.on{display:flex;animation:pulse 2.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(255,77,141,.15)}}
+@media (prefers-reduced-motion:reduce){.glow i,.heart{animation-duration:90s}}
+</style>
+</head>
+<body>
+
+<div class="glow"><i></i><i></i><i></i></div>
+<div id="hearts"></div>
+
+<!-- ===== BACKGROUND MUSIC =====
+     PLACEHOLDER: put your MP3 link in the src below (e.g. "music.mp3" next to this file, or a direct https link) -->
+<audio id="bgm" src="vellake-song.mp3" loop preload="auto"></audio>
+<button id="music" aria-label="Toggle music">🎵</button>
+<button class="btn back" id="back">← Back</button>
+
+<!-- ===== SCREEN 1: INTRO ===== -->
+<section class="view show" id="intro">
+  <p class="sub" style="margin:0 0 10px">✨ A little something for you ✨</p>
+  <h1 class="script">Happy Birthday</h1>
+  <!-- PLACEHOLDER: her name is set in CONFIG below -->
+  <h1 id="herName" style="margin-top:6px"></h1>
+  <p class="sub" id="tagline"></p>
+  <button class="btn" id="enter">💖 Tap to open</button>
+</section>
+
+<!-- ===== SCREEN 2: QUIZ ===== -->
+<section class="view" id="quiz">
+  <div class="dots" id="dots"></div>
+  <h2 id="qText"></h2>
+  <div class="opts" id="qOpts"></div>
+  <p class="reply" id="qReply"></p>
+</section>
+
+<!-- ===== SCREEN 3: MENU ===== -->
+<section class="view" id="menu">
+  <h2 class="script" style="font-size:2.6rem">Choose something 💕</h2>
+  <p class="sub">Everything here was made just for you</p>
+  <div class="menu">
+    <div class="card" data-go="memories"><span>📸</span>Memories</div>
+    <div class="card" data-go="letters"><span>💌</span>Letters</div>
+    <div class="card" data-go="voice"><span>🎙️</span>Voice Note</div>
+    <div class="card" data-go="celebrate"><span>🎂</span>Celebrate</div>
+  </div>
+</section>
+
+<!-- ===== MEMORIES ===== (edit photos in CONFIG) -->
+<section class="view top" id="memories"><h2 class="script">Our Memories</h2><p class="sub">Little moments that mean the world</p><div class="grid" id="grid"></div></section>
+
+<!-- ===== LETTERS ===== (edit text in CONFIG) -->
+<section class="view top" id="letters"><h2 class="script">A Letter For You</h2><p class="sub">Tap the envelope</p>
+  <div class="env" id="env"><span class="flap">💌</span><div class="paper" id="paper"></div></div></section>
+
+<!-- ===== VOICE NOTE ===== (edit audio link in CONFIG) -->
+<section class="view" id="voice"><h2 class="script">A Voice Note</h2><p class="sub">Press play and listen 🎧</p>
+  <div class="voice"><div style="font-size:2.4rem">🎙️</div><audio id="voiceAudio" controls preload="none"></audio></div></section>
+
+<!-- ===== CELEBRATE (CANDLE) ===== -->
+<section class="view" id="celebrate"><h2 class="script">Make a Wish</h2><p class="sub">Close your eyes, then blow out the candles</p>
+  <div class="cake" id="cake"><div class="candles" id="candles"></div><div class="tier a"></div><div class="tier b"></div></div>
+  <button class="btn" id="blow">💨 Blow the candles</button>
+  <div class="wish" id="wish"></div></section>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+/* =====================================================
+   2. CONFIG — EDIT EVERYTHING YOU NEED RIGHT HERE
+   ===================================================== */
+const CONFIG = {
+  name: "[KAIRA]",                         // PLACEHOLDER: her name
+  tagline: "Tu Toh Jaan Hai Mera.", // PLACEHOLDER: intro line
+  musicSrc: "vellake-song.mp3",                               // PLACEHOLDER: background music MP3 link
+  voiceSrc: "",                               // PLACEHOLDER: your voice note (mp3/m4a/ogg link)
+  finalWish: "May all your dreams come true 💖", // shown after blowing candles
+  candles: 3,
+
+  // PLACEHOLDER: quiz questions (add or remove as you like)
+  quiz: [
+    { q: "What did sami plan for you?", options: ["Your smile", "Bomb blast", "Birthday party", "Everything!"], reply: "VHUL hoise — SAMI Paikhana Kortese 😘" },
+    { q: "Who loves you the most?", options: ["Dad", "Mom", "Me"], reply: "OBVIOUSLY SAMI, I Agree 😌" },
+    { q: "Ready for your surprise?", options: ["jodio iccha nai!!", "Tao Amare Dekhao!"], reply: "Naicha Dekhao Taile… 💃💃🎉" }
+  ],
+
+  // PLACEHOLDER: photos — src can be "images/1.jpg" or a full https link
+  photos: [
+    { src: "images/1.jpeg", caption: "Our first date" },
+    { src: "images/2.jpeg", caption: "That sunny day" },
+    { src: "images/3.jpeg", caption: "Laughing together" },
+    { src: "images/4.jpeg", caption: "Our favourite place" },
+    { src: "images/5.jpeg", caption: "Just us" },
+    { src: "images/6.jpeg", caption: "Forever" },
+    { src: "images/7.jpeg", caption: "Special moment" },
+    { src: "images/8.jpeg", caption: "Beautiful memory" },
+    { src: "images/9.jpeg", caption: "Unforgettable" },
+    { src: "images/10.jpeg", caption: "Always together" },
+    { src: "images/11.jpeg", caption: "My everything" }
+],
+
+  // PLACEHOLDER: your letter (blank line = new paragraph)
+  letter: {
+    title: "My Kaira,",
+    body: "Happy Birthday amar pakhii amar priyo  koilla  ta! 🥹❤️🎂
+
+Jano pakhi.. kkhn o kkhn o vabhi tmi amar life e ashcho bole amar koto kichu change hoyeche... Tmr sathe kotha bola tmr rag.. tmr oviman tmr hasi ei choto choto jinisgulao kkhn jani amar kache onk special hoye geche. Tmi hoyto bujho na.. but diner moddhe emn onk shomoy ache jokhn kono karon charai tmr kotha mone pore jay. Ar tokhn mone hoy.. ei manush ta amar life ei ache.. etai onk shundor ekta bepar... 😌🌼❤️
+Ami jani na future le amader jonno ki lekha ache.. but ami chai amra duijon ekjon arekjonke bujhar chesta kori. rag oviman holeo kotha bole thik kori ar shudhu valo shomoy na kharap shomoyeo ekjon arekjoner pashe thaki. Ami perfect na. amr o onk vul hote pare but ami chai amar vulgula bujhe nijeke better korte.. jate tmr sathe thaka manush ta tomake shanti dey............ kosto na. 😌❤️
+Ajke tmr birthday tai amar mon theke ekta wish Allah jeno tmk shobshomoy valo rakhe.. tmr moner shob kosto dur kore dey... tmr shopnogula puron kore ar tmr mukher oi shundor hasita shobshomoy rekhe dey... Tmi jibone onk shundor shundor muhurto pao.. nijeke kokhono choto mone na koro..... ar kokhono emn vebo na je tmi eka... ❤️‍🩹
+Ar ekta kotha jan..  tmk amar life ei pawar jonno ami grateful.... Tmi amar kache shudhu amar gf na tmi emn ekjon jar sathe ami amar din er choto choto kotha share korte chai.. jar sathe hasi thatta korte chai jar sathe future niye vabte valo lage.... Tmr sathe aro onk birthday.. onk hasi onk golpo ar onk shundor memory toiri korar iccha ache amar.......   🥹❤️
+Happy Birthday bby 🎂💗 Tmr notun bochor ta jeno tmr jonno onk shanti valobasha ar khushi niye ashe..... Nijer kheyal rakhba valo thakba ar emni kore hashthe thakba... Tmr ei special dine tmk onk onk valobasha... ❤️🫂🌷
+Happy Birthday amar koilla... 🥹❤️🎂 Allah jeno tmk shobshomoy valo rakhe.. shukhe rakhe ar tmr shob iccha puron kore... Tmr mukhe shobshomoy emni hashi lege thakuk.. Ami chai tmr sathe aro onk shundor moment share korte eksathe hashi khushi thakte... Tmi amar kache onk special..pakhiii.. 😌 ❤️🫶🏻 Love you so much bby! 🥹💗🌹",
+    from: "— Sami, always ❤️"
+  }
+};
+
+/* ====== Code below: you don't need to edit ====== */
+const $ = id => document.getElementById(id);
+const bgm = $('bgm'), musicBtn = $('music'), back = $('back');
+let musicOn = false, current = 'intro', history_ = [];
+
+$('herName').textContent = CONFIG.name;
+$('tagline').textContent = CONFIG.tagline;
+if (CONFIG.musicSrc) bgm.src = CONFIG.musicSrc;
+if (CONFIG.voiceSrc) $('voiceAudio').src = CONFIG.voiceSrc;
+bgm.volume = .5;
+
+/* floating hearts (size/blur = distance) */
+const hc = ['#ffffff', '#ff8fb8', '#ff4d8d', '#b47bff', '#ff8a5c'];
+for (let i = 0; i < 20; i++) {
+  const h = document.createElement('span'), far = Math.random();
+  h.className = 'heart'; h.textContent = '♥';
+  h.style.cssText = `left:${Math.random()*100}%;font-size:${12+(1-far)*30}px;color:${hc[i%hc.length]};filter:blur(${far*2.4}px);` +
+    `--o:${(.8-far*.45).toFixed(2)};--dx:${Math.random()*60-30}px;animation-duration:${9+far*12+Math.random()*4}s;animation-delay:${-Math.random()*20}s`;
+  $('hearts').appendChild(h);
+}
+
+/* confetti */
+function party(big) {
+  const cols = ['#ff4d8d', '#8a3ffc', '#ff8a5c', '#ffffff', '#ffd1e3'];
+  confetti({ particleCount: big ? 160 : 90, spread: 100, origin: { y: .6 }, colors: cols });
+  if (big) { const end = Date.now() + 2200;
+    (function f() { confetti({ particleCount: 4, angle: 60, spread: 60, origin: { x: 0, y: .7 }, colors: cols });
+      confetti({ particleCount: 4, angle: 120, spread: 60, origin: { x: 1, y: .7 }, colors: cols });
+      if (Date.now() < end) requestAnimationFrame(f); })(); }
+}
+
+/* navigation */
+function go(id, push = true) {
+  $(current).classList.remove('show');
+  if (push) history_.push(current);
+  current = id; $(id).classList.add('show');
+  back.classList.toggle('show', !['intro', 'quiz', 'menu'].includes(id));
+}
+back.onclick = () => go('menu', false);
+document.querySelectorAll('[data-go]').forEach(c => c.onclick = () => { go(c.dataset.go); if (c.dataset.go === 'celebrate') resetCandles(); });
+
+/* music */
+function setMusic(on) { musicOn = on; musicBtn.textContent = on ? '🎵' : '🔇'; on ? bgm.play().catch(() => {}) : bgm.pause(); }
+musicBtn.onclick = () => setMusic(!musicOn);
+
+/* intro → quiz */
+$('enter').onclick = () => {
+  if (CONFIG.musicSrc) { musicBtn.classList.add('on'); setMusic(true); }
+  party(true); startQuiz();
+};
+
+/* quiz */
+let qi = 0;
+function startQuiz() {
+  $('dots').innerHTML = CONFIG.quiz.map(() => '<b></b>').join('');
+  qi = 0; go('quiz'); showQ();
+}
+function showQ() {
+  const q = CONFIG.quiz[qi];
+  [...$('dots').children].forEach((d, i) => d.classList.toggle('on', i <= qi));
+  $('qText').textContent = q.q; $('qReply').textContent = '';
+  $('qOpts').innerHTML = '';
+  q.options.forEach(o => {
+    const b = document.createElement('button'); b.className = 'btn'; b.textContent = o;
+    b.onclick = () => { $('qOpts').style.pointerEvents = 'none'; $('qReply').textContent = q.reply; party(false);
+      setTimeout(() => { $('qOpts').style.pointerEvents = ''; qi++; qi < CONFIG.quiz.length ? showQ() : go('menu'); }, 1700); };
+    $('qOpts').appendChild(b);
+  });
+}
+if (!CONFIG.quiz.length) $('enter').onclick = () => { if (CONFIG.musicSrc) { musicBtn.classList.add('on'); setMusic(true); } party(true); go('menu'); };
+
+/* memories */
+$('grid').innerHTML = CONFIG.photos.map((p, i) =>
+  `<div class="mem" style="animation-delay:${i*.1}s"><div class="ph">${p.src ? `<img loading="lazy" src="${p.src}" alt="${p.caption}">` : '💗'}</div><p>${p.caption}</p></div>`).join('');
+
+/* letter */
+$('paper').innerHTML = `<h3>${CONFIG.letter.title}</h3>` + CONFIG.letter.body.split('\n\n').map(t => `<p>${t}</p>`).join('') + `<div class="from">${CONFIG.letter.from}</div>`;
+$('env').onclick = () => $('env').classList.toggle('open');
+
+/* voice note: pause music while it plays */
+const va = $('voiceAudio'); let resume = false;
+va.onplay = () => { resume = musicOn; if (musicOn) bgm.pause(); };
+va.onpause = va.onended = () => { if (resume && musicOn) bgm.play().catch(() => {}); };
+
+/* candles */
+function resetCandles() {
+  $('cake').classList.remove('out'); $('wish').classList.remove('show'); $('wish').textContent = '';
+  $('candles').innerHTML = '<div class="candle"><div class="flame"></div><div class="smoke"></div></div>'.repeat(CONFIG.candles);
+}
+function blow() {
+  if ($('cake').classList.contains('out')) { resetCandles(); return; }
+  $('cake').classList.add('out'); $('blow').textContent = '🕯️ Light again';
+  setTimeout(() => { party(true); $('wish').textContent = CONFIG.finalWish; $('wish').classList.add('show'); }, 700);
+}
+$('blow').onclick = () => { blow(); if (!$('cake').classList.contains('out')) $('blow').textContent = '💨 Blow the candles'; };
+$('candles').onclick = blow;
+resetCandles();
+</script>
+</body>
+</html>
